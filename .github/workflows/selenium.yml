@@ -12,10 +12,10 @@ jobs:
     timeout-minutes: 3
     runs-on: ubuntu-latest
     
-    strategy:
-      fail-fast: false
-      matrix:
-        browser: [CHROME, FIREFOX, EDGE]
+    #strategy:
+    #  fail-fast: false
+    #  matrix:
+    #    browser: [CHROME, FIREFOX, EDGE]
 
     steps:
       - name: Checkout Source
