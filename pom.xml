@@ -1,0 +1,189 @@
+<project
+        xmlns="http://maven.apache.org/POM/4.0.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+        https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.ves</groupId>
+  	<artifactId>selenium-automation</artifactId>
+  	<version>0.0.1-SNAPSHOT</version>
+
+    <!-- ================== global fields ================== -->
+    <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <base.url>https://the-internet.herokuapp.com</base.url>
+
+        <!--ディフォルト tagをフィルターしない -->
+        <groups></groups>
+        <skipTests>false</skipTests>
+    </properties>
+
+    <!-- ================== dependencies ================== -->
+    <dependencies>
+
+        <!-- Selenium -->
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-java</artifactId>
+            <version>4.18.1</version>
+        </dependency>
+
+        <!-- WebDriverManager -->
+        <dependency>
+            <groupId>io.github.bonigarcia</groupId>
+            <artifactId>webdrivermanager</artifactId>
+            <version>5.6.3</version>
+        </dependency>
+
+        <!-- JUnit 5 -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.10.1</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- JUnit Platform Suite（オプション） -->
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-suite</artifactId>
+            <version>1.10.1</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Allure JUnit5 -->
+        <dependency>
+            <groupId>io.qameta.allure</groupId>
+            <artifactId>allure-junit5</artifactId>
+            <version>2.27.0</version>
+            <scope>test</scope>
+        </dependency>
+        
+        <!-- AspectJ Weaver -->   
+        <dependency>
+    		<groupId>org.aspectj</groupId>
+    		<artifactId>aspectjweaver</artifactId>
+    		<version>1.9.22</version>
+    		<scope>test</scope>
+		</dependency>
+
+        <!-- RestAssured（ Seleniumと共存できる） -->
+        <dependency>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>rest-assured</artifactId>
+            <version>5.4.0</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- ログ -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>2.0.13</version>
+        </dependency>
+
+    </dependencies>
+
+    <!-- ================== ビルド　設定 ================== -->
+    <build>
+        <plugins>
+
+            <!-- ========== Surefire（コアー）========== -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.2.5</version>
+
+                <configuration>
+                    <useModulePath>false</useModulePath>
+                    <skipTests>${skipTests}</skipTests>
+                    <argLine>
+        				-javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/1.9.22/aspectjweaver-1.9.22.jar"
+    				</argLine>
+
+                    <!-- JUnit5 Tag -->
+                    <groups>${groups}</groups>
+
+                    <!-- Allure 結果ディレクトリ -->
+                    <systemPropertyVariables>
+                        <allure.results.directory>
+                            ${project.build.directory}/allure-results
+                        </allure.results.directory>
+                        <browser>${browser}</browser>
+                        <headless>${headless}</headless>
+                        <base.url>${base.url}</base.url>
+                    </systemPropertyVariables>
+
+                    <!-- Allure JUnit5 Listener（key） -->
+                    <properties>
+                        <property>
+                            <name>listener</name>
+                            <value>io.qameta.allure.junit5.AllureJunit5</value>
+                        </property>
+                    </properties>
+                </configuration>
+            </plugin>
+
+            <!-- ========== Allure Maven プラグイン ========== -->
+            <plugin>
+                <groupId>io.qameta.allure</groupId>
+                <artifactId>allure-maven</artifactId>
+                <version>2.12.0</version>
+            </plugin>
+
+        </plugins>
+    </build>
+
+    <!-- ================== Profile（差分だけ） ================== -->
+    <profiles>
+		
+		<profile>
+    			<id>headless</id>
+    			<properties>
+        			<headless>true</headless>
+    			</properties>
+		</profile>
+		
+        <profile>
+            <id>smoke</id>
+            <properties>
+                <groups>smoke</groups>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>regression</id>
+            <properties>
+                <groups>regression</groups>
+            </properties>
+        </profile>
+        
+    	<profile>
+        	<id>chrome</id>
+        	<properties>
+            	<browser>CHROME</browser>
+        	</properties>
+    	</profile>
+
+    	<profile>
+        	<id>firefox</id>
+        	<properties>
+            	<browser>FIREFOX</browser>
+        	</properties>
+    	</profile>
+
+    	<profile>
+        	<id>edge</id>
+        	<properties>
+            	<browser>EDGE</browser>
+        	</properties>
+    	</profile>
+		
+    </profiles>
+
+</project>
