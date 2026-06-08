@@ -7,14 +7,15 @@ on:
   pull_request:
     branches: [main]
 
-strategy:
-  matrix:
-    browser: [CHROME, FIREFOX, EDGE]
-
 jobs:
   test:
     timeout-minutes: 3
     runs-on: ubuntu-latest
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [CHROME, FIREFOX, EDGE]
 
     steps:
       - name: Checkout Source
