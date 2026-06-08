@@ -7,8 +7,13 @@ on:
   pull_request:
     branches: [main]
 
+strategy:
+  matrix:
+    browser: [CHROME, FIREFOX, EDGE]
+
 jobs:
   test:
+    timeout-minutes: 3
     runs-on: ubuntu-latest
 
     steps:
@@ -30,7 +35,7 @@ jobs:
             maven-${{ runner.os }}
 
       - name: Run Selenium Tests
-        run: mvn clean test -Pchrome,headless
+        run: mvn clean test -Psmoke -Pheadless -Dbrowser==${{ matrix.browser }}  -Dbase.url=https://the-internet.herokuapp.com
 
       - name: Upload Surefire Reports
         if: always()
