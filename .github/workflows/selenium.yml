@@ -36,11 +36,15 @@ jobs:
             maven-${{ runner.os }}
 
       - name: Run Selenium Tests
-        run: mvn clean test -Psmoke -Pheadless -Dbrowser=${{ matrix.browser }}  -Dbase.url=https://the-internet.herokuapp.com
+        run: mvn clean test -Psmoke -Pheadless -Dbrowser=chrome  -Dbase.url=https://the-internet.herokuapp.com
 
-      - name: Upload Surefire Reports
+      - name: Upload Allure Results
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: surefire-reports
-          path: target/surefire-reports
+          name: allure-results
+          path: target/allure-results
+    
+    
+    
+    
